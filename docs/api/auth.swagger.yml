@@ -1,0 +1,158 @@
+openapi: 3.0.0
+info:
+    title: Auth API
+    version: 1.0.0
+    description: API for authentication
+
+paths:
+    /auth/register:
+        post:
+            summary: Register a user
+            parameters:
+                - in: 'body'
+                  name: 'body'
+                  required: true
+                  schema:
+                      type: object
+                      required:
+                          - username
+                          - email
+                          - password
+                          - passwordConf
+                      properties:
+                          username:
+                              type: string
+                              minLength: 3
+                              description: Could not include whitespaces
+                          email:
+                              type: string
+                              format: email
+                          password:
+                              type: string
+                              minLength: 8
+                              pattern: '^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{8,}$'
+                              description: Password need contain minimum 1 uppercase, 1 lowercase, 1 number
+                          passwordConf:
+                              type: string
+                              minLength: 8
+                              pattern: '^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{8,}$'
+                              description: PasswordConf need contain minimum 1 uppercase, 1 lowercase, 1 number
+
+            responses:
+                '201':
+                    description: Registered successfull
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                    token:
+                                        type: string
+                            examples:
+                                application/json:
+                                    message: Registered successfully
+                                    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkpvaG5Eb2UiLCJlbWFpbCI6ImpvaG5kb2VAZXhhbXBsZS5jb20iLCJwZXJtaXNzaW9ucyI6W10sImlkIjoiNWYxNzI4MjgxMjA4NzE4NjY2YjMxNzE4IiwiaWF0IjoxNTg5NzE5NzY5LCJleHAiOjE1ODk3Mzc3Njl9.4A8GibDjK5S5J5_5NXOyN5Wx4xj1M5VtH5N1ZjW3AqI
+
+                '400':
+                    description: Incorrect format data
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: Bad Request
+                '409':
+                    description: Username or email already exist
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: username already exist
+                '500':
+                    description: Internal error
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: Internal error
+
+    /auth/login:
+        post:
+            summary: Log in a user
+            parameters:
+                - in: 'body'
+                  name: 'body'
+                  required: true
+                  schema:
+                      type: object
+                      required:
+                          - username
+                          - password
+                      properties:
+                          username:
+                              type: string
+                              minLength: 3
+                              description: Could not include whitespaces
+                          password:
+                              type: string
+                              minLength: 8
+                              pattern: '^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{8,}$'
+                              description: Password need contain minimum 1 uppercase, 1 lowercase, 1 number
+
+            responses:
+                '200':
+                    description: Login successfull
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: Login successfully
+                                    token:
+                                        type: string
+                                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkpvaG5Eb2UiLCJlbWFpbCI6ImpvaG5kb2VAZXhhbXBsZS5jb20iLCJwZXJtaXNzaW9ucyI6W10sImlkIjoiNWYxNzI4MjgxMjA4NzE4NjY2YjMxNzE4IiwiaWF0IjoxNTg5NzE5NzY5LCJleHAiOjE1ODk3Mzc3Njl9.4A8GibDjK5S5J5_5NXOyN5Wx4xj1M5VtH5N1ZjW3AqI
+                                    id:
+                                        type: number
+                                        example: 63c7f1fdf81848b857e638ed
+                '400':
+                    description: Incorrect format data
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: Bad Request
+                '401':
+                    description: Unauthorized
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: Unauthorized
+                '500':
+                    description: Internal error
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: Internal error

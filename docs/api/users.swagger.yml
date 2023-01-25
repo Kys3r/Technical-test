@@ -1,0 +1,115 @@
+---
+openapi: 3.0.0
+info:
+    title: Users API
+    version: 1.0.0
+    description: API for Users requests
+paths:
+    /users/:
+        get:
+            tags:
+                - Users
+            summary: Retrieve all users
+            description: Retrieve all users from the database
+            responses:
+                '200':
+                    description: Users retrieved successfully
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                properties:
+                                    _id:
+                                        type: string
+                                    username:
+                                        type: string
+                                    email:
+                                        type: string
+                                    projects:
+                                        type: array
+                                        items:
+                                            type: object
+                                            properties:
+                                                name:
+                                                    type: string
+                                                creator:
+                                                    type: string
+                                                startDate:
+                                                    type: string
+                                                endDate:
+                                                    type: string
+                                                contributors:
+                                                    type: string
+                                                resources:
+                                                    type: string
+                                                location:
+                                                    type: string
+                                                totalSteps:
+                                                    type: number
+                                                progressStep:
+                                                    type: number
+                                                createdDate:
+                                                    type: string
+                                                deletionFlag:
+                                                    type: boolean
+                                    permissions:
+                                        type: string
+                '500':
+                    description: Internal error
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: Internal error
+        put:
+            tags:
+                - Users
+            summary: Update user
+            description: Update a user in database
+            parameters:
+                - in: body
+                  name: body
+                  required: true
+                  schema:
+                      type: object
+                      required:
+                          - id
+                          - username
+                          - email
+                      properties:
+                          id:
+                              type: string
+                          username:
+                              type: string
+                              minLength: 3
+                              description: Could not include whitespaces
+                          email:
+                              type: string
+                              format: email
+
+            responses:
+                '200':
+                    description: Update successfull
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                            examples:
+                                application/json:
+                                    message: Update successfully
+                '500':
+                    description: Internal error
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: Internal error
